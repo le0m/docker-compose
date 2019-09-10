@@ -1,0 +1,20 @@
+.dind_service: &dind_service
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:19.03-dind
+
+.build_services: &build_services
+  script:
+    - echo ${CI_JOB_TOKEN} | docker login --username gitlab-ci-token --password-stdin ${CI_REGISTRY}
+    - docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} || true
+    - docker build --cache-from ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} --tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} --tag ${CI_REGISTRY_IMAGE}:latest .
+    - docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+    - docker push ${CI_REGISTRY_IMAGE}:latest
+
+docker-compose:build:
+  image: docker:19.03
+  <<: *dind_service
+  <<: *build_services
