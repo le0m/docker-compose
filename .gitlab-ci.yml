@@ -16,5 +16,7 @@
 
 docker-compose:build:
   image: docker:19.03
+  only:
+    - tags
   <<: *dind_service
   <<: *build_services
