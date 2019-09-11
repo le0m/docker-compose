@@ -12,5 +12,5 @@ FROM docker:19.03
 #       https://github.com/docker/compose/issues/6617#issuecomment-478662098
 #       https://github.com/docker/compose/issues/6617#issuecomment-485175495
 
-RUN apk add --no-cache py-pip python-dev libffi-dev openssl-dev gcc libc-dev make &&\
+RUN apk add --no-cache py-pip python-dev libffi-dev openssl-dev gcc libc-dev make openssh-client &&\
     pip install --no-cache-dir "idna>=2.5,<2.8" cryptography==2.4.2 paramiko==2.4.2 docker-compose
